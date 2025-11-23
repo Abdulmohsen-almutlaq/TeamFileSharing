@@ -1,6 +1,6 @@
 # TeamFileSharing
 
-A simple Java application for managing teams, users, and file sharing, backed by a MySQL database.
+A simple Java application for managing teams, users, and file sharing, backed by a postgresSQL database.
 
 ## Project Structure
 
