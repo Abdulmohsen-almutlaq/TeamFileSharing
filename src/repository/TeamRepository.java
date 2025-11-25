@@ -11,7 +11,7 @@ public class TeamRepository {
     public void create(Team team) {
         String sql = "INSERT INTO teams (name) VALUES (?)";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, team.name);
@@ -25,7 +25,7 @@ public class TeamRepository {
     public Team findById(int id) {
         String sql = "SELECT * FROM teams WHERE id=?";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
@@ -49,7 +49,7 @@ public class TeamRepository {
         List<Team> list = new ArrayList<>();
         String sql = "SELECT * FROM teams";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = stmt.executeQuery();
@@ -71,7 +71,7 @@ public class TeamRepository {
     public void update(Team team) {
         String sql = "UPDATE teams SET name=? WHERE id=?";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, team.name);
@@ -87,7 +87,7 @@ public class TeamRepository {
     public void delete(int id) {
         String sql = "DELETE FROM teams WHERE id=?";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);

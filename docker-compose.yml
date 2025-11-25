@@ -18,6 +18,8 @@ services:
   app:
     build: .
     container_name: java_app
+    ports:
+      - "12345:12345"
     depends_on:
       - db
     environment:
@@ -27,8 +29,6 @@ services:
       DB_PASS: apppassword
     volumes:
       - ./storage:/app/storage
-    ports:
-      - "8080:8080"
 
 volumes:
   postgres_data:

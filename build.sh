@@ -1,2 +1,4 @@
 #!/bin/sh
-javac src/*.java -d .
+mkdir -p out
+find src -name "*.java" > sources.txt
+javac -d out @sources.txt

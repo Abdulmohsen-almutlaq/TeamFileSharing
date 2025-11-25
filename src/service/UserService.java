@@ -22,4 +22,12 @@ public class UserService {
     public void deleteUser(int id) {
         repo.delete(id);
     }
+
+    public User login(String email, String password) {
+        User user = repo.findByEmail(email);
+        if (user != null && user.password.equals(password)) {
+            return user;
+        }
+        return null;
+    }
 }

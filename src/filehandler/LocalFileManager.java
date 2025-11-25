@@ -3,16 +3,41 @@ package filehandler;
 import java.io.IOException;
 import java.nio.file.*;
 
-public class LocalFileManager implements FileHandler {
-    @Override
-    public void upload(String source, String target) throws IOException {
+public class LocalFileManager {
+    
+    private static final String STORAGE_DIR = "storage/";
+
+    public String saveFile(String filename, byte[] content, int teamId) throws IOException {
+        Path storagePath = Paths.get(STORAGE_DIR, "team_" + teamId);
+        if (!Files.exists(storagePath)) {
+            Files.createDirectories(storagePath);
+        }
+
+        // Create a unique filename to avoid collisions
+        String uniqueFilename = System.currentTimeMillis() + "_" + filename;
+        Path filePath = storagePath.resolve(uniqueFilename);
+        
+        Files.write(filePath, content);
+        
+        return filePath.toString();
     }
 
-    @Override
-    public void download(String source, String target) throws IOException {
+    public byte[] readFileBytes(String pathStr) throws IOException {
+        Path path = Paths.get(pathStr);
+        if (Files.exists(path)) {
+            return Files.readAllBytes(path);
+        }
+        throw new IOException("File not found: " + pathStr);
     }
 
-    @Override
-    public void delete(String path) throws IOException {
+    public String readFile(String pathStr) throws IOException {
+        return new String(readFileBytes(pathStr));
+    }
+
+    public void deleteFile(String pathStr) throws IOException {
+        Path path = Paths.get(pathStr);
+        if (Files.exists(path)) {
+            Files.delete(path);
+        }
     }
 }

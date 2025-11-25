@@ -2,10 +2,28 @@ package database;
 import java.sql.*;
 
 public class Database {
-    private static Connection connection;
+    private static Database instance;
+    private Connection connection;
 
-    public static Connection connect() {
-        if (connection != null) return connection;
+    private Database() {
+        // Private constructor
+    }
+
+    public static synchronized Database getInstance() {
+        if (instance == null) {
+            instance = new Database();
+        }
+        return instance;
+    }
+
+    public Connection getConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                return connection;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         try {
             Class.forName("org.postgresql.Driver");

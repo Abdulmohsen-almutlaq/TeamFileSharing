@@ -11,7 +11,7 @@ public class FileRepository {
     public void create(FileItem file) {
         String sql = "INSERT INTO files (filename, filepath, team_id, uploaded_by) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, file.filename);
@@ -29,7 +29,7 @@ public class FileRepository {
     public FileItem findById(int id) {
         String sql = "SELECT * FROM files WHERE id=?";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
@@ -56,7 +56,7 @@ public class FileRepository {
         List<FileItem> list = new ArrayList<>();
         String sql = "SELECT * FROM files";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = stmt.executeQuery();
@@ -78,10 +78,37 @@ public class FileRepository {
         return list;
     }
 
+    public List<FileItem> findByTeamId(int teamId) {
+        List<FileItem> list = new ArrayList<>();
+        String sql = "SELECT * FROM files WHERE team_id=?";
+
+        try (Connection conn = Database.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, teamId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                list.add(new FileItem(
+                    rs.getInt("id"),
+                    rs.getString("filename"),
+                    rs.getString("filepath"),
+                    (Integer) rs.getObject("team_id"),
+                    (Integer) rs.getObject("uploaded_by")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("FIND Files by Team failed: " + e.getMessage());
+        }
+
+        return list;
+    }
+
     public void update(FileItem file) {
         String sql = "UPDATE files SET filename=?, filepath=?, team_id=?, uploaded_by=? WHERE id=?";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, file.filename);
@@ -100,11 +127,16 @@ public class FileRepository {
     public void delete(int id) {
         String sql = "DELETE FROM files WHERE id=?";
 
-        try (Connection conn = Database.connect();
+        try (Connection conn = Database.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("DB: Deleted file with ID " + id);
+            } else {
+                System.out.println("DB: File with ID " + id + " not found or already deleted.");
+            }
 
         } catch (SQLException e) {
             System.err.println("DELETE File failed: " + e.getMessage());

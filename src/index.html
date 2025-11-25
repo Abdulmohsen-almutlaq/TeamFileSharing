@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamFileSharing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TeamFileSharing</h1>
+
+        <div id="authSection">
+            <div class="section">
+                <h2>Login</h2>
+                <input type="text" id="loginEmail" placeholder="Email Address">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button onclick="login()">Sign In</button>
+            </div>
+            <div class="section">
+                <h2>Create Account</h2>
+                <input type="text" id="regUsername" placeholder="Username">
+                <input type="text" id="regEmail" placeholder="Email Address">
+                <input type="password" id="regPassword" placeholder="Password">
+                <input type="number" id="regTeamId" placeholder="Team ID (e.g., 1)">
+                <button onclick="register()">Register</button>
+            </div>
+        </div>
+
+        <div id="dashboardSection" class="hidden">
+            <div class="user-bar">
+                <span>Welcome, <span id="userNameDisplay">User</span></span>
+                <button onclick="logout()">Logout</button>
+            </div>
+            
+            <div class="section">
+                <h2>Upload File</h2>
+                <div id="dropZone">
+                    <p style="margin:0; font-size: 1.1em; font-weight: 500;">Drag & Drop files here</p>
+                    <p style="margin:5px 0 0; font-size: 0.9em; color: #9ca3af;">or click to browse</p>
+                    <input type="file" id="fileInput" style="display: none;">
+                </div>
+                <input type="text" id="uploadFilename" placeholder="Filename (e.g., report.txt)">
+                <textarea id="uploadContent" rows="5" placeholder="File Content Preview" readonly></textarea>
+                <button onclick="uploadFile()">Upload File</button>
+            </div>
+
+            <div class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f3f4f6; padding-bottom: 15px;">
+                    <h2 style="margin:0; border:none; padding:0;">Team Files</h2>
+                    <button onclick="loadFiles()" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">Refresh</button>
+                </div>
+                <ul id="fileList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
